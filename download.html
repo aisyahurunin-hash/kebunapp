@@ -48,6 +48,7 @@ details p{margin:6px 0 0;color:var(--soft)}
   <h2>🤖 Android <span class="tag">APK</span></h2>
   <p class="small" style="margin:0 0 12px">Unduh file aplikasinya, lalu pasang. Gratis.</p>
   <a class="btn" id="apk" href="https://github.com/aisyahurunin-hash/kebunmurajaah/releases/latest/download/KebunMurojaah.apk">⬇ Unduh Aplikasi (APK)</a>
+  <p class="small hide" id="noapk" style="margin:12px 0 0;padding:10px 12px;border-radius:14px;background:#fff3cd;color:#6a4b00">File APK belum tersedia saat ini. Sementara, pakai versi web di bawah, atau pasang dari browser (Chrome menu titik tiga, lalu Pasang aplikasi). Coba lagi nanti ya.</p>
   <ol>
     <li>Ketuk tombol di atas, tunggu unduhan selesai.</li>
     <li>Buka file <b>KebunMurojaah.apk</b> dari notifikasi atau folder Download.</li>
@@ -101,6 +102,15 @@ details p{margin:6px 0 0;color:var(--soft)}
   var a=document.getElementById('cAnd'),i=document.getElementById('cIos');
   if(ios){a.classList.add('hide');i.classList.add('order1')}
   else if(!and){a.querySelector('.small').textContent='Buka halaman ini dari HP Android untuk mengunduh, atau kirim link halaman ini ke HP-mu.'}
+  var apk=document.getElementById('apk'),no=document.getElementById('noapk');
+  apk.addEventListener('click',function(e){
+    if(apk.dataset.ok==='1')return;
+    e.preventDefault();no.classList.add('hide');
+    fetch('https://api.github.com/repos/aisyahurunin-hash/kebunmurajaah/releases/latest').then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(j){
+      var f=(j.assets||[]).filter(function(x){return /\.apk$/i.test(x.name)})[0];if(!f)throw 0;
+      apk.dataset.ok='1';apk.href=f.browser_download_url;location.href=f.browser_download_url;
+    }).catch(function(){no.classList.remove('hide')});
+  });
   var d=null,b=document.getElementById('pwa');
   addEventListener('beforeinstallprompt',function(e){e.preventDefault();d=e;b.classList.remove('hide')});
   b.addEventListener('click',function(){if(d){d.prompt();d=null;b.classList.add('hide')}});
