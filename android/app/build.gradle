@@ -1,0 +1,38 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'id.kebun.murojaah'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId 'id.kebun.murojaah'
+        minSdk 24
+        targetSdk 34
+        versionCode (project.findProperty('vCode') ?: '1').toInteger()
+        versionName '8.0'
+    }
+
+    signingConfigs {
+        release {
+            storeFile file('../kebun.jks')
+            storeType 'pkcs12'
+            storePassword 'kebunmurojaah'
+            keyAlias 'kebun'
+            keyPassword 'kebunmurojaah'
+        }
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+            minifyEnabled false
+        }
+    }
+
+    lint {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+}
